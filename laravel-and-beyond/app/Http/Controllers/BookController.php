@@ -30,4 +30,35 @@ class BookController extends Controller
         // Return the view for adding a new book
         return view('books.create');
     }
+
+    public function store(Request $request)
+    {
+        // Validate the form data
+        $request->validate([
+            'title' => 'required',
+            'author' => 'required',
+            'description' => 'nullable',
+            'category' => 'nullable',
+            'cover_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('cover_image')) {
+            $imagePath = $request->file('cover_image')->store('book_covers', 'public');
+        } else {
+            $imagePath = null;
+        }
+
+        // Create a new book record
+        Book::create([
+            'title' => $request->input('title'),
+            'author' => $request->input('author'),
+            'description' => $request->input('description'),
+            'category' => $request->input('category'),
+            'cover_image' => $imagePath,
+        ]);
+
+        // Redirect to the book listing page
+        return redirect('/books')->with('success', 'Book added successfully!');
+    }
 }
