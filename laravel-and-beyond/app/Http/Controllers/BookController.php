@@ -104,4 +104,16 @@ class BookController extends Controller
         // Redirect to the book listing page
         return redirect('/books')->with('success', 'Book updated successfully!');
     }
+
+    public function destroy($id)
+    {
+        // Find the book by its ID
+        $book = Book::findOrFail($id);
+
+        // Delete the book record
+        $book->delete();
+
+        // Redirect to the book listing page
+        return redirect('/books')->with('success', 'Book deleted successfully!');
+    }
 }
