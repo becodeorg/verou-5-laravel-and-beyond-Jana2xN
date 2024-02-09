@@ -17,13 +17,14 @@ class CreateBooksTable extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->id(); // Auto-incremental primary key
-            $table->string('author');
+            $table->id();
             $table->string('title');
-            $table->string('format');
-            $table->string('language');
-            $table->string('genre');
-            $table->timestamps(); // Created at and Updated at timestamps
+            $table->string('author');
+            $table->text('description')->nullable();
+            $table->string('category')->nullable();
+            $table->string('cover_image')->nullable();
+            $table->boolean('availability')->default(true);
+            $table->timestamps();
         });
     }
 
