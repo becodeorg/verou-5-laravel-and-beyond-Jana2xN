@@ -61,7 +61,7 @@ class BookController extends Controller
         // Redirect to the book listing page
         return redirect('/books')->with('success', 'Book added successfully!');
     }
-    
+
     public function edit($id)
     {
         // Find the book by its ID
@@ -69,5 +69,39 @@ class BookController extends Controller
 
         // Return the view for editing the book
         return view('books.edit', compact('book'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate the form data
+        $request->validate([
+            'title' => 'required',
+            'author' => 'required',
+            'description' => 'nullable',
+            'category' => 'nullable',
+            'cover_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Find the book by its ID
+        $book = Book::findOrFail($id);
+
+        // Handle image upload
+        if ($request->hasFile('cover_image')) {
+            $imagePath = $request->file('cover_image')->store('book_covers', 'public');
+        } else {
+            $imagePath = $book->cover_image;
+        }
+
+        // Update the book record
+        $book->update([
+            'title' => $request->input('title'),
+            'author' => $request->input('author'),
+            'description' => $request->input('description'),
+            'category' => $request->input('category'),
+            'cover_image' => $imagePath,
+        ]);
+
+        // Redirect to the book listing page
+        return redirect('/books')->with('success', 'Book updated successfully!');
     }
 }
