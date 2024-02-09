@@ -61,4 +61,13 @@ class BookController extends Controller
         // Redirect to the book listing page
         return redirect('/books')->with('success', 'Book added successfully!');
     }
+    
+    public function edit($id)
+    {
+        // Find the book by its ID
+        $book = Book::findOrFail($id);
+
+        // Return the view for editing the book
+        return view('books.edit', compact('book'));
+    }
 }
